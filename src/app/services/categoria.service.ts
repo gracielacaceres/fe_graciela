@@ -13,7 +13,7 @@ interface Categoria {
   providedIn: 'root'
 })
 export class CategoriaService {
-  private apiUrl = 'https://verbose-space-chainsaw-q55v6vv9774347w6-8081.app.github.dev/machabarberia/api/categorias'; // URL base de la API
+  private apiUrl = 'https://organic-space-potato-g4q76jqpj5vg2p64v-8081.app.github.dev/machabarberia/api/categorias'; // URL base de la API
 
   constructor(private http: HttpClient) {}
 

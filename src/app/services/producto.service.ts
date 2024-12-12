@@ -8,7 +8,7 @@ import { Producto } from '../shared/producto.model';
   providedIn: 'root'
 })
 export class ProductoService {
-  private apiUrl = 'https://verbose-space-chainsaw-q55v6vv9774347w6-8081.app.github.dev/machabarberia/api/productos'; // Cambia la URL si es necesario
+  private apiUrl = 'https://organic-space-potato-g4q76jqpj5vg2p64v-8081.app.github.dev/machabarberia/api/productos'; // Cambia la URL si es necesario
 
   constructor(private http: HttpClient) { }
 
