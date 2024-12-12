@@ -22,6 +22,14 @@
       <label>Precio:</label>
       <input type="number" class="form-control" [(ngModel)]="producto.precio" name="precio" required>
     </div>
+    <div class="form-group">
+      <label>Categoría:</label>
+      <select class="form-control" [(ngModel)]="producto.categoria.idCategoria" name="id_categoria" required>
+        <option *ngFor="let categoria of categorias" [value]="categoria.idCategoria">
+          {{ categoria.nombre }}
+        </option>
+      </select>
+    </div>
     <!-- Campo: Stock -->
     <div class="form-group">
       <label>Stock:</label>

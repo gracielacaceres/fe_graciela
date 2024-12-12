@@ -5,12 +5,13 @@ import Swal from 'sweetalert2';
 interface Categoria {
   idCategoria?: number;
   nombre: string;
+  estado?: string; // Add estado field to match backend
 }
 
 @Component({
   selector: 'app-categoria',
   templateUrl: './categoria.component.html',
-  styleUrl: './categoria.component.css'
+  styleUrls: ['./categoria.component.css']
 })
 export class CategoriaComponent {
   categorias: Categoria[] = [];
@@ -18,14 +19,11 @@ export class CategoriaComponent {
   editingCategoria: Categoria | null = null;
   editingCategoriaNombre: string = '';
 
-
   constructor(private categoriaService: CategoriaService) {}
 
   ngOnInit(): void {
     this.getAllCategorias();
   }
-
-
 
   getAllCategorias(): void {
     this.categoriaService.getAllCategorias().subscribe(
@@ -61,7 +59,6 @@ export class CategoriaComponent {
     this.editingCategoriaNombre = this.editingCategoria.nombre;
   }
 
-
   updateCategoria(): void {
     if (this.editingCategoria && this.editingCategoriaNombre.trim() !== '') {
       this.editingCategoria.nombre = this.editingCategoriaNombre;
@@ -82,8 +79,6 @@ export class CategoriaComponent {
       Swal.fire('Advertencia', 'El nombre de la categoría es obligatorio', 'warning');
     }
   }
-
-
 
   deleteCategoria(id: number): void {
     Swal.fire({
@@ -106,6 +101,19 @@ export class CategoriaComponent {
         );
       }
     });
+  }
+
+  restoreCategoria(id: number): void {
+    this.categoriaService.restoreCategoria(id).subscribe(
+      (data) => {
+        const index = this.categorias.findIndex(c => c.idCategoria === data.idCategoria);
+        if (index !== -1) this.categorias[index] = data;
+        Swal.fire('Restaurado', 'Categoría restaurada correctamente', 'success');
+      },
+      (error) => {
+        Swal.fire('Error', 'No se pudo restaurar la categoría', 'error');
+      }
+    );
   }
 
   cancelEdit(): void {
