@@ -1,0 +1,148 @@
+<div class="container">
+  <!-- Formulario de Venta -->
+  <section class="venta">
+    <h2>Venta</h2>
+    <form>
+      <label for="idUsuario">Seleccione un Usuario:</label>
+      <select [(ngModel)]="idUsuario" name="idUsuario" required>
+        <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario">
+          {{ usuario.nombre }} {{ usuario.apellido }}
+        </option>
+      </select>
+    </form>
+  </section>
+
+  <!-- Tabla de Detalle de Venta -->
+  <section class="detalle-venta">
+    <h2>Detalle de Venta</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Cantidad</th>
+          <th>Precio Unitario</th>
+          <th>Subtotal</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let detalle of detalles; let i = index">
+          <td>{{ detalle.nombreProducto }}</td>
+          <td>{{ detalle.cantidad }}</td>
+          <td>{{ detalle.precioUnitario | currency }}</td>
+          <td>{{ detalle.subtotal | currency }}</td>
+          <td>
+            <button class="btn btn-danger" (click)="eliminarDetalle(i)">
+              <i class="fas fa-trash-alt"></i> <!-- Icono de basura para eliminar -->
+            </button>
+          </td>
+        </tr>
+        <!-- Fila para agregar un nuevo producto -->
+        <tr>
+          <td>
+            <select [(ngModel)]="idProducto" (change)="onProductoChange($event)" name="idProducto" required>
+              <option *ngFor="let producto of productos" [value]="producto.idProducto">
+                {{ producto.nombre }}
+              </option>
+            </select>
+          </td>
+          <td>
+            <input type="number" [(ngModel)]="cantidad" name="cantidad" (input)="calcularSubtotal()" required>
+          </td>
+          <td>
+            <input type="number" [(ngModel)]="precioUnitario" name="precioUnitario" readonly>
+          </td>
+          <td>
+            <input type="number" [(ngModel)]="subtotal" name="subtotal" readonly>
+          </td>
+          <td>
+            <button type="button" class="btn btn-primary" (click)="agregarDetalle()">
+              <i class="fas fa-plus"></i> <!-- Icono de añadir -->
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="total">
+      <p><strong>Total a Pagar:</strong> {{ totalPago | currency }}</p>
+    </div>
+    <!-- Botón para registrar la venta completa -->
+    <button type="button" class="btn btn-success" (click)="registrarVenta()">
+      <i class="fas fa-check"></i> <!-- Icono de registrar -->
+    </button>
+  </section>
+
+  <!-- Lista de Ventas Activas/Inactivas -->
+  <section class="lista-ventas">
+    <h2>Ventas {{ mostrandoActivas ? 'Activas' : 'Inactivas' }}</h2>
+    <button type="button" class="btn btn-secondary" (click)="alternarVentas()">
+      Mostrar {{ mostrandoActivas ? 'Inactivas' : 'Activas' }}
+    </button>
+    <table>
+      <thead>
+        <tr>
+          <th>ID Venta</th>
+          <th>Usuario</th>
+          <th>Fecha de la Venta</th>
+          <th>Total</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let venta of ventas">
+          <td>{{ venta.idVenta }}</td>
+          <td>{{ venta.usuario.nombre }} {{ venta.usuario.apellido }}</td>
+          <td>{{ venta.fechaVenta }}</td>
+          <td>{{ venta.montoTotal | currency }}</td>
+          <td>{{ venta.estado }}</td>
+          <td>
+            <button class="btn btn-info" (click)="verDetalleVenta(venta)">
+              <i class="fas fa-eye"></i> <!-- Icono de ojo para ver detalles -->
+            </button>
+            <button *ngIf="mostrandoActivas" class="btn btn-danger" (click)="eliminarVenta(venta.idVenta)">
+              <i class="fas fa-trash-alt"></i> <!-- Icono de basura para eliminar -->
+            </button>
+            <button *ngIf="!mostrandoActivas" class="btn btn-success" (click)="restaurarVenta(venta.idVenta)">
+              <i class="fas fa-undo"></i> <!-- Icono de restaurar para restaurar -->
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Modal para ver detalles de la venta -->
+  <div id="detalleVentaModal" class="modal">
+    <div class="modal-content">
+      <span class="close" (click)="cerrarModal()">&times;</span>
+      <h2>Detalle de la Venta</h2>
+      <div *ngIf="ventaSeleccionada">
+        <p><strong>ID Venta:</strong> {{ ventaSeleccionada.idVenta }}</p>
+        <p><strong>Usuario:</strong> {{ ventaSeleccionada.usuario.nombre }} {{ ventaSeleccionada.usuario.apellido }}</p>
+        <p><strong>Fecha de la Venta:</strong> {{ ventaSeleccionada.fechaVenta }}</p>
+        <p><strong>Total:</strong> {{ ventaSeleccionada.montoTotal | currency }}</p>
+        <p><strong>Estado:</strong> {{ ventaSeleccionada.estado }}</p>
+        <h3>Productos</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Cantidad</th>
+              <th>Precio Unitario</th>
+              <th>Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let detalle of ventaSeleccionada.detalles">
+              <td>{{ detalle.producto.idProducto }}</td>
+              <td>{{ detalle.cantidad }}</td>
+              <td>{{ detalle.precioUnitario | currency }}</td>
+              <td>{{ detalle.subtotal | currency }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
